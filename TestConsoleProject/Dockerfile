@@ -1,8 +1,4 @@
-﻿FROM alpine:3.17 AS base
-RUN apk update \
-    && apk upgrade \
-    && apk add git \
-    && apk add dotnet6-runtime
+﻿FROM mcr.microsoft.com/dotnet/runtime:6.0 AS base
 WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
@@ -20,5 +16,4 @@ RUN dotnet publish "TestConsoleProject.csproj" -c Release -o /app/publish /p:Use
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-RUN git clone "https://github.com/dimon4egkl/test_git_library"
 ENTRYPOINT ["dotnet", "TestConsoleProject.dll"]
